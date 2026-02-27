@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Digital Shelf</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1A365D; /* Deep Blue */
+            --accent: #E53E3E;  /* Bold Red */
+            --gold: #D69E2E;    /* Premium Gold */
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            /* Beautiful background image with a dark overlay to make text readable */
+            background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: slideDown 0.8s ease-out;
+            margin-bottom: 40px;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        /* Glassmorphism Card Effect & Transitions */
+        .book-card {
+            background: rgba(255, 255, 255, 0.92); /* Slightly transparent white */
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeIn 1s ease-out both;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            background: rgba(255, 255, 255, 1);
+        }
+        
+        .book-card h3 {
+            margin: 10px 0 5px 0;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+        
+        .author {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0;
+        }
+        
+        .tag {
+            align-self: flex-start;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            background: var(--gold);
+            margin-bottom: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            background: #F7FAFC;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        button:active { 
+            transform: scale(0.95); 
+        }
+        
+        .btn-buy { 
+            background: var(--primary); 
+            color: white; 
+        }
+        .btn-buy:hover {
+            background: #2B6CB0;
+            box-shadow: 0 6px 12px rgba(43, 108, 176, 0.3);
+        }
+        
+        .btn-rent { 
+            background: var(--accent); 
+            color: white; 
+        }
+        .btn-rent:hover {
+            background: #F56565;
+            box-shadow: 0 6px 12px rgba(245, 101, 101, 0.3);
+        }
+        
+        /* Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>The Digital Shelf</h1>
+    <div class="container" id="book-container">
+        </div>
+
+    <script>
+        async function loadBooks() {
+            const response = await fetch('/api/books');
+            const books = await response.json();
+            const container = document.getElementById('book-container');
+            
+            books.forEach((book, index) => {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.style.animationDelay = `${index * 0.1}s`; 
+                
+                card.innerHTML = `
+                    <span class="tag">${book.category}</span>
+                    <h3>${book.title}</h3>
+                    <p class="author">By ${book.author}</p>
+                    <p>⭐ <strong>${book.rating.toFixed(1)} / 5.0</strong></p> 
+                    
+                    <div class="price-row">
+                        <span><strong>Buy:</strong> ₹${book.buy_price}</span>
+                        <span><strong>Rent:</strong> ₹${book.hourly_rate}/hr</span>
+                    </div>
+                    
+                    <p style="text-align: right; margin-top: 0; color: #718096;"><small>Stock: ${book.stock}</small></p>
+                    
+                    <div class="actions">
+                        <button class="btn-buy" onclick="transact(${book.id}, 'buy')">Buy Book</button>
+                        <button class="btn-rent" onclick="transact(${book.id}, 'rent')">Rent (1 hr)</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function transact(bookId, action) {
+            window.location.href = `/checkout/${bookId}/${action}`;
+        }
+
+        loadBooks();
+    </script>
+</body>
+</html>

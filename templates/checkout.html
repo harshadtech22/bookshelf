@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - The Digital Shelf</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ECF0F1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .checkout-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h2 { color: #2C3E50; margin-top: 0; }
+        .price {
+            font-size: 24px;
+            color: #E74C3C;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            background-color: #eee;
+            border: 2px dashed #bdc3c7;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+        }
+        .btn-form {
+            display: inline-block;
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .btn-form:hover { background-color: #2ecc71; }
+        .back-link { display: block; margin-top: 20px; color: #3498db; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="checkout-box">
+        <h2>Order Summary</h2>
+        <p><strong>Book:</strong> {{ book.title }}</p>
+        <p><strong>Action:</strong> {{ action }}</p>
+        
+        <div class="price">Total to Pay: ₹{{ price }}</div>
+        
+        
+
+        <p>After paying, please fill out this form with your Transaction ID to confirm your order:</p>
+        
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc-Z9Gi_PWrA_EoUO8vJmREcjqmASZwk9qLPM4rCOZvGzcBjA/viewform?usp=header" target="_blank" class="btn-form">Fill Payment Form</a>
+        
+        <a href="/" class="back-link">← Cancel and go back to store</a>
+    </div>
+
+</body>
+</html>
